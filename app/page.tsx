@@ -76,7 +76,7 @@ function AdBanner(){
   );
 }
 
-function Card3D({children,style={},glow}){
+function Card3D({children, style={}, glow}: any){
   const [rot,setRot]=useState({x:0,y:0});
   function onMove(e){
     const r=e.currentTarget.getBoundingClientRect();
