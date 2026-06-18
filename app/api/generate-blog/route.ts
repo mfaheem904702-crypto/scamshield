@@ -1,22 +1,20 @@
 // app/api/generate-blog/route.ts
 import { NextResponse } from "next/server";
-
-// Agar aap Gemini AI use karna chahte hain, to pehle terminal mein chalaein: npm install @google/generative-ai
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// (.env file mein apni GEMINI_API_KEY save zaroor karein)
+// 🚀 1. NETWORK TIMEOUT FIX: Yeh line Vercel par 10-second ka limit khatam kar degi
+export const runtime = "edge";
+
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 export async function POST(req: Request) {
   try {
-    // 1. Frontend se bheja gaya keyword receive karna (e.g., "Eidi Wallet Scam")
     const { keyword } = await req.json();
 
     if (!keyword) {
       return NextResponse.json({ error: "Keyword is required" }, { status: 400 });
     }
 
-    // 2. Gemini AI ko comprehensive prompt dena
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
     const prompt = `Write a comprehensive, high-quality SEO-optimized blog post in a mix of English and simple Roman Urdu about the latest online scam in Pakistan related to: "${keyword}". 
     The response must include:
@@ -30,8 +28,6 @@ export async function POST(req: Request) {
     const response = await result.response;
     const aiText = response.text();
 
-    // 3. Yahan aap is content ko database (MongoDB/Supabase) mein save karwa sakte hain.
-    // Abhi ke liye hum sirf check karne ke liye isko return kar rahe hain.
     return NextResponse.json({ 
       success: true, 
       message: "Blog generated successfully!",
