@@ -1,7 +1,9 @@
 // app/api/generate-blog/route.ts
 import { NextResponse } from "next/server";
 
-export const runtime = "edge";
+// 🚀 FIX: Edge runtime hata kar normal serverless function aur uski max duration 60 seconds kar di
+export const runtime = "nodejs"; 
+export const maxDuration = 60; 
 
 export async function POST(req: Request) {
   try {
@@ -24,7 +26,7 @@ export async function POST(req: Request) {
     - Detailed content formatted beautifully in Markdown with headings (##), bold text (**), and lists.
     - Include 5 critical warning signs and a guide on how to report to FIA Cybercrime (Helpdesk 9911).`;
 
-    // 🚀 DIRECT FETCH API: Yeh Edge Runtime par bina kisi SDK ke 10x fast chalta hai aur timeout nahi hota
+    // Gemini 1.5 Flash ko direct call
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
       {
