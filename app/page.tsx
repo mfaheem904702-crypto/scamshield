@@ -33,7 +33,7 @@ const FAQS = [
   {q:"What payment methods are accepted?",a:"We accept Stripe (international cards), JazzCash, and EasyPaisa for Pakistani users."},
 ];
 
-const verdictStyle = (dark) => ({
+const verdictStyle = (dark: any) => ({
   FAKE:{color:"#df2c47",bg:dark?"#2a1418":"#fdf2f4",border:"#f3a6b1",label:"SCAM DETECTED",emoji:"⛔"},
   REAL:{color:"#107c41",bg:dark?"#112519":"#f0f9f4",border:"#9cd9b5",label:"LEGITIMATE",emoji:"✅"},
   UNCERTAIN:{color:"#b76e00",bg:dark?"#2a2010":"#fdf8ee",border:"#f5d6a0",label:"UNCERTAIN",emoji:"⚠️"},
