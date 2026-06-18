@@ -39,7 +39,7 @@ const verdictStyle = (dark: any) => ({
   UNCERTAIN:{color:"#b76e00",bg:dark?"#2a2010":"#fdf8ee",border:"#f5d6a0",label:"UNCERTAIN",emoji:"⚠️"},
 });
 
-function th(dark){
+function th(dark: any){
   return{
     bg:dark?"#090d16":"#f8fafc",
     card:dark?"#111827":"#ffffff",
