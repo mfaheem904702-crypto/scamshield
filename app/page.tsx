@@ -54,7 +54,7 @@ function th(dark: any){
 }
 
 function detectCheckType(q: any) {
-  const inp = q.toLowerCase().trim();
+  const inp = (q || "").toLowerCase().trim(); 
   if(inp.startsWith("http")||inp.includes("www.")||inp.includes(".com")||inp.includes(".pk")||inp.includes(".net")||inp.includes(".org")||inp.includes("bit.ly")||inp.includes("t.me")||inp.includes(".xyz")) return "link";
   if(LINK_SCAM_PATTERNS.some(p=>inp.includes(p))) return "link";
   const words = inp.split(" ");
@@ -78,11 +78,13 @@ function AdBanner(){
 
 function Card3D({children, style={}, glow}: any){
   const [rot,setRot]=useState({x:0,y:0});
-  function onMove(e){
-    const r=e.currentTarget.getBoundingClientRect();
-    const x=((e.clientY-r.top)/r.height-.5)*6;
-    const y=((e.clientX-r.left)/r.width-.5)*-6;
-    setRot({x,y});
+  function onMove(e: any){
+    const currentTarget = e.currentTarget;
+    if (!currentTarget) return;
+    const r = currentTarget.getBoundingClientRect();
+    const x = ((e.clientY - r.top) / r.height - 0.5) * 6;
+    const y = ((e.clientX - r.left) / r.width - 0.5) * -6;
+    setRot({x, y});
   }
   return(
     <div onMouseMove={onMove} onMouseLeave={()=>setRot({x:0,y:0})}
@@ -92,7 +94,7 @@ function Card3D({children, style={}, glow}: any){
   );
 }
 
-function BillingModal({plan,price,onClose,dark}){
+function BillingModal({plan,price,onClose,dark}: any){
   const t=th(dark);
   return(
     <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.6)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",padding:16}}>
@@ -129,16 +131,15 @@ function BillingModal({plan,price,onClose,dark}){
   );
 }
 
-// ── Landing ───────────────────────────────────────────────────────────────────
-function Landing({dark,setDark,onGetStarted}){
-  const[faqOpen,setFaqOpen]=useState(null);
+function Landing({dark,setDark,onGetStarted}: any){
+  const[faqOpen,setFaqOpen]=useState<number | null>(null);
   const[liveQ,setLiveQ]=useState("");
-  const[activeBlog,setActiveBlog]=useState(null);
+  const[activeBlog,setActiveBlog]=useState<any>(null);
   const[blogQ,setBlogQ]=useState("");
   const t=th(dark);
   const filtered=BLOG_POSTS.filter(p=>!blogQ||p.title.toLowerCase().includes(blogQ.toLowerCase())||p.cat.toLowerCase().includes(blogQ.toLowerCase()));
 
-  const scrollToSection=(id)=>{const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:"smooth"});};
+  const scrollToSection=(id: string)=>{const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:"smooth"});};
 
   if(activeBlog)return(
     <div style={{background:t.bg,minHeight:"100vh",fontFamily:"system-ui,-apple-system,sans-serif",color:t.txt}}>
@@ -147,7 +148,7 @@ function Landing({dark,setDark,onGetStarted}){
           <span style={{fontSize:22}}>🛡️</span>
           <span style={{fontSize:16,fontWeight:700,color:t.txt}}>ScamShield</span>
         </div>
-        <button onClick={()=>setDark(d=>!d)} style={{background:"none",border:"none",cursor:"pointer",fontSize:18}}>{dark?"☀️":"🌙"}</button>
+        <button onClick={()=>setDark((d: boolean)=>!d)} style={{background:"none",border:"none",cursor:"pointer",fontSize:18}}>{dark?"☀️":"🌙"}</button>
       </nav>
       <div style={{maxWidth:740,margin:"0 auto",padding:"3rem 1.25rem"}}>
         <button onClick={()=>setActiveBlog(null)} style={{background:t.input,border:`1px solid ${t.border}`,borderRadius:6,padding:"8px 16px",cursor:"pointer",fontSize:13,fontWeight:600,color:t.txt,marginBottom:24}}>← Back to Blog</button>
@@ -157,7 +158,7 @@ function Landing({dark,setDark,onGetStarted}){
             <span style={{fontSize:11,fontWeight:700,color:t.primary,background:dark?"#1e293b":"#eff6ff",padding:"4px 12px",borderRadius:4}}>{activeBlog.cat}</span>
             <h1 style={{fontSize:24,fontWeight:800,margin:"16px 0",lineHeight:1.3}}>{activeBlog.title}</h1>
             <div style={{fontSize:15,lineHeight:1.8}}>
-              {activeBlog.content.split('\n').map((l,i)=>{
+              {activeBlog.content.split('\n').map((l: string,i: number)=>{
                 if(l.startsWith('## '))return<h2 key={i} style={{fontSize:19,fontWeight:700,margin:"24px 0 12px",color:t.txt}}>{l.slice(3)}</h2>;
                 if(l.startsWith('**')&&l.endsWith('**'))return<p key={i} style={{fontWeight:700,margin:"14px 0 6px"}}>{l.slice(2,-2)}</p>;
                 return l?<p key={i} style={{margin:"6px 0",color:t.txt2}}>{l}</p>:<br key={i}/>;
@@ -182,7 +183,7 @@ function Landing({dark,setDark,onGetStarted}){
           <span onClick={()=>scrollToSection("blog")} style={{fontSize:13,fontWeight:500,color:t.txt2,cursor:"pointer"}}>Blog</span>
           <span onClick={()=>scrollToSection("faq")} style={{fontSize:13,fontWeight:500,color:t.txt2,cursor:"pointer"}}>FAQ</span>
           <span onClick={()=>scrollToSection("pricing")} style={{fontSize:13,fontWeight:500,color:t.txt2,cursor:"pointer"}}>Pricing</span>
-          <button onClick={()=>setDark(d=>!d)} style={{background:"none",border:"none",cursor:"pointer",fontSize:16}}>{dark?"☀️":"🌙"}</button>
+          <button onClick={()=>setDark((d: boolean)=>!d)} style={{background:"none",border:"none",cursor:"pointer",fontSize:16}}>{dark?"☀️":"🌙"}</button>
           <button onClick={onGetStarted} style={{background:t.primaryGlow,color:"#fff",border:"none",borderRadius:6,padding:"8px 18px",fontWeight:600,fontSize:13,cursor:"pointer"}}>Get Started Free</button>
         </div>
       </nav>
@@ -326,7 +327,7 @@ function Landing({dark,setDark,onGetStarted}){
           <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(250px,1fr))",gap:20,maxWidth:840,margin:"0 auto"}}>
             {[
               {name:"Standard Tier",price:"$0",features:[`${FREE_LIMIT} requests/day`,"Core heuristics","All analysis portals","10 record history"],color:"#64748b",popular:false},
-              {name:"Premium Tier",price:"$10",features:["Unlimited requests","Full AI technical report","Advanced asset checking","Complete archival trail","Analytical summaries","Priority infrastructure infrastructure"],color:t.primary,popular:true},
+              {name:"Premium Tier",price:"$10",features:["Unlimited requests","Full AI technical report","Advanced asset checking","Complete archival trail","Analytical summaries","Priority infrastructure"],color:t.primary,popular:true},
               {name:"Enterprise",price:"$25",features:["Everything in Premium","Direct API endpoints","5 active seats","Custom logs","Dedicated support manager"],color:"#0f172a",popular:false},
             ].map((p,i)=>(
               <Card3D key={i} style={{background:t.bg,border:p.popular?`2px solid ${t.primary}`:`1px solid ${t.border}`,borderRadius:8,padding:24,position:"relative",textAlign:"left"}} glow={t.glow}>
@@ -384,13 +385,12 @@ function Landing({dark,setDark,onGetStarted}){
   );
 }
 
-// ── REAL SUPABASE AUTHENTICATION COMPONENT ────────────────────────────────────
-function Auth({dark,onAuth,onBack}){
+function Auth({dark,onAuth,onBack}: any){
   const[mode,setMode]=useState("login");
   const[form,setForm]=useState({name:"",email:"",password:"",confirm:""});
   const[err,setErr]=useState("");
   const[loading,setLoading]=useState(false);
-  const set=(k,v)=>setForm(f=>({...f,[k]:v}));
+  const set=(k: string,v: string)=>setForm(f=>({...f,[k]:v}));
   
   async function submit(){
     setErr("");
@@ -405,8 +405,7 @@ function Auth({dark,onAuth,onBack}){
     
     try {
       if (mode === "signup") {
-        // Asli Supabase Sign Up Call
-        const { data, error } = await supabase.auth.signUp({
+        const { error } = await supabase.auth.signUp({
           email: form.email,
           password: form.password,
           options: {
@@ -419,22 +418,20 @@ function Auth({dark,onAuth,onBack}){
         alert("Registration Successful! Please check your email inbox/spam for the validation link.");
         setMode("login");
       } else {
-        // Asli Supabase Sign In Call
         const { data, error } = await supabase.auth.signInWithPassword({
           email: form.email,
           password: form.password,
         });
         if (error) throw error;
         
-        // Custom object matching dashboard expectation
         onAuth({
-          name: data.user.user_metadata?.full_name || data.user.email.split("@")[0],
-          email: data.user.email,
+          name: data.user?.user_metadata?.full_name || data.user?.email?.split("@")[0] || "User",
+          email: data.user?.email,
           plan: "free",
           checksToday: 0
         });
       }
-    } catch(error) {
+    } catch(error: any) {
       setErr(error.message || "Authentication process failed.");
     } finally {
       setLoading(false);
@@ -473,11 +470,10 @@ function Auth({dark,onAuth,onBack}){
   );
 }
 
-// ── Dashboard ─────────────────────────────────────────────────────────────────
-function Dashboard({user,dark,setDark,onLogout}){
+function Dashboard({user,dark,setDark,onLogout}: any){
   const[page,setPage]=useState("checker");
   const[query,setQuery]=useState("");
-  const[result,setResult]=useState(null);
+  const[result,setResult]=useState<any>(null);
   const[loading,setLoading]=useState(false);
   const[history,setHistory]=useState([
     {input:"earn5000perday.pk",type:"🌐",result:"FAKE",confidence:96,date:"Jun 17"},
@@ -487,13 +483,13 @@ function Dashboard({user,dark,setDark,onLogout}){
     {input:"Upwork.com",type:"🌐",result:"REAL",confidence:98,date:"Jun 13"},
   ]);
   const[showUpgrade,setShowUpgrade]=useState(false);
-  const[notif,setNotif]=useState(null);
+  const[notif,setNotif]=useState<any>(null);
   const[sidebar,setSidebar]=useState(true);
-  const[faqOpen,setFaqOpen]=useState(null);
+  const[faqOpen,setFaqOpen]=useState<number | null>(null);
   const[blogQ,setBlogQ]=useState("");
-  const[activeBlog,setActiveBlog]=useState(null);
+  const[activeBlog,setActiveBlog]=useState<any>(null);
   const[checksUsed,setChecksUsed]=useState(user?.checksToday||0);
-  const[billingModal,setBillingModal]=useState(null);
+  const[billingModal,setBillingModal]=useState<any>(null);
 
   const[affiliateMetrics,setAffiliateMetrics]=useState({
     code:"SECURE"+(user?.name?.toUpperCase()||"USER")+"30",
@@ -507,59 +503,89 @@ function Dashboard({user,dark,setDark,onLogout}){
 
   const t=th(dark);
   const checksLeft=Math.max(0,FREE_LIMIT-checksUsed);
-  const vs=verdictStyle(dark);
+  const vs: any=verdictStyle(dark);
   const fakeCount=history.filter(h=>h.result==="FAKE").length;
   const realCount=history.filter(h=>h.result==="REAL").length;
   const filtered=BLOG_POSTS.filter(p=>!blogQ||p.title.toLowerCase().includes(blogQ.toLowerCase())||p.cat.toLowerCase().includes(blogQ.toLowerCase()));
 
-  function showNotif(msg,color="#107c41"){setNotif({msg,color});setTimeout(()=>setNotif(null),3000);}
+  function showNotif(msg: string,color="#107c41"){setNotif({msg,color});setTimeout(()=>setNotif(null),3000);}
 
-async function analyzeScam() {
-  if (!query.trim()) return;
-  if (user.plan === "free" && checksLeft <= 0) { showUpgrade(true); return; }
-  
-  setLoading(true);
-  setResult(null);
-
-  try {
-    const response = await fetch("/api/verify-scam", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: query, userEmail: user.email })
-    });
-
-    const data = await response.json();
-    
-    if (data.success) {
-      setResult(data.analysis);
-      setHistory(h => [data.newLog, ...h.slice(0, 19)]);
-      setChecksUsed(c => c + 1);
-    } else {
-      showNotif("System diagnosis failed. Try again.", "#df2c47");
+  async function analyzeScam() {
+    if (!query.trim()) return;
+    if (user.plan === "free" && checksLeft <= 0) { 
+      setShowUpgrade(true); 
+      return; 
     }
-  } catch (error) {
-    showNotif("Network optimization timeout.", "#df2c47");
-  } finally {
-    setLoading(false);
-  }
-}
+    
+    setLoading(true);
+    setResult(""); 
 
-const navItems = [
-  { id: "checker", icon: "🔍", label: "Audit Engine" },
-  { id: "dashboard", icon: "📊", label: "Telemetry Panel" },
-  { id: "history", icon: "📋", label: "Audit History" },
-  { id: "blog", icon: "📝", label: "Bulletins" },
-  { id: "pricing", icon: "💎", label: "Subscription" },
-  { id: "faq", icon: "❓", label: "Help Desk" },
-  { id: "affiliate", icon: "💰", label: "Partner Network" },
-  { id: "privacy", icon: "🔒", label: "Data Policy" },
-];
+    try {
+      const response = await fetch("/api/verify-scam", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: query, userEmail: user.email })
+      });
 
-if (user?.email === "mfaheem904702@gmail.com") {
-  if (!navItems.some(n => n.id === "admin")) {
-    navItems.splice(6, 0, { id: "admin", icon: "⚙️", label: "Root System" });
+      if (!response.ok) throw new Error("Failed to fetch diagnostic data.");
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      let fullText = "";
+
+      while (reader) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        
+        const chunk = decoder.decode(value);
+        fullText += chunk;
+        
+        setResult((prev: any) => ({
+          verdict: "UNCERTAIN", 
+          checkType: detectCheckType(query),
+          confidence: prev?.confidence || 50, 
+          summary: fullText, 
+          reasons: prev?.reasons || [],
+          safe: prev?.safe || []
+        }));
+      }
+
+      setHistory((h: any) => [
+        { 
+          input: query, 
+          type: detectCheckType(query) === "link" ? "🔗" : detectCheckType(query) === "person" ? "👤" : "🌐", 
+          result: "UNCERTAIN", 
+          confidence: 90, 
+          date: "Jun 18" 
+        }, 
+        ...h.slice(0, 19)
+      ]);
+      setChecksUsed((c: number) => c + 1);
+
+    } catch (error: any) {
+      console.error("Frontend Fetch Error:", error);
+      showNotif(error.message || "Network optimization timeout.", "#df2c47");
+    } finally {
+      setLoading(false);
+    }
   }
-}
+
+  const navItems = [
+    { id: "checker", icon: "🔍", label: "Audit Engine" },
+    { id: "dashboard", icon: "📊", label: "Telemetry Panel" },
+    { id: "history", icon: "📋", label: "Audit History" },
+    { id: "blog", icon: "📝", label: "Bulletins" },
+    { id: "pricing", icon: "💎", label: "Subscription" },
+    { id: "faq", icon: "❓", label: "Help Desk" },
+    { id: "affiliate", icon: "💰", label: "Partner Network" },
+    { id: "privacy", icon: "🔒", label: "Data Policy" },
+  ];
+
+  if (user?.email === "mfaheem904702@gmail.com") {
+    if (!navItems.some(n => n.id === "admin")) {
+      navItems.splice(6, 0, { id: "admin", icon: "⚙️", label: "Root System" });
+    }
+  }
 
   return(
     <div style={{display:"flex",minHeight:"100vh",background:t.bg,fontFamily:"system-ui,-apple-system,sans-serif",color:t.txt,position:"relative"}}>
@@ -588,24 +614,38 @@ if (user?.email === "mfaheem904702@gmail.com") {
                 <div style={{width:28,height:28,background:t.primary,borderRadius:4,display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontWeight:600,fontSize:11}}>{user?.name ? user.name[0].toUpperCase() : "U"}</div>
                 <div style={{overflow:"hidden"}}><div style={{fontSize:12,fontWeight:600,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{user.name}</div><div style={{fontSize:11,color:t.primary,fontWeight:600}}>Standard Tier · {checksLeft} left</div></div>
               </div>
-              <button onClick={()=>setDark(d=>!d)} style={{width:"100%",background:t.input,border:`1px solid ${t.border}`,borderRadius:4,padding:"6px",fontSize:11,cursor:"pointer",color:t.txt,marginBottom:6}}>{dark?"☀️ Light Display":"🌙 Dark Display"}</button>
+              <button onClick={()=>setDark((d: boolean)=>!d)} style={{width:"100%",background:t.input,border:`1px solid ${t.border}`,borderRadius:4,padding:"6px",fontSize:11,cursor:"pointer",color:t.txt,marginBottom:6}}>{dark?"☀️ Light Display":"🌙 Dark Display"}</button>
               <button onClick={onLogout} style={{width:"100%",background:"transparent",border:"1px solid #cbd5e1",borderRadius:4,padding:"6px",fontSize:11,cursor:"pointer",color:"#dc2626",fontWeight:500}}>Exit Session</button>
             </>
           ):(
             <div style={{display:"flex",flexDirection:"column",gap:10,alignItems:"center"}}>
               <div style={{width:24,height:24,background:t.primary,borderRadius:4,display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontWeight:600,fontSize:10}}>{user?.name ? user.name[0].toUpperCase() : "U"}</div>
-              <button onClick={()=>setDark(d=>!d)} style={{background:"none",border:"none",cursor:"pointer",fontSize:12}}>{dark?"☀️":"🌙"}</button>
+              <button onClick={()=>setDark((d: boolean)=>!d)} style={{background:"none",border:"none",cursor:"pointer",fontSize:12}}>{dark?"☀️":"🌙"}</button>
             </div>
           )}
         </div>
       </div>
 
-      <div style={{flex:1,overflow:"auto",minWidth:0}}>
-        <div style={{background:t.card,borderBottom:`1px solid ${t.border}`,padding:"0 1.5rem",display:"flex",alignItems:"center",justifyContent:"space-between",height:60,position:"sticky",top:0,zIndex:5}}>
-          <span style={{fontSize:13,color:t.txt2}}>Operator: <strong style={{color:t.txt}}>{user.name}</strong></span>
-          <div style={{display:"flex",gap:12,alignItems:"center"}}>
-            <span style={{fontSize:11,background:dark?"#1e293b":"#f1f5f9",color:t.txt2,padding:"4px 10px",borderRadius:4,fontWeight:600,border:`1px solid ${t.border}`}}>Quota: {checksLeft}/{FREE_LIMIT} requests</span>
-            <button onClick={()=>setPage("pricing")} style={{fontSize:11,background:t.primaryGlow,color:"#fff",border:"none",borderRadius:4,padding:"6px 14px",cursor:"pointer",fontWeight:600}}>Upgrade Seat</button>
+      <div style={{ flex: 1, overflow: "auto", minWidth: 0 }}>
+        <div style={{ background: t.card, borderBottom: `1px solid ${t.border}`, padding: "0 1.5rem", display: "flex", alignItems: "center", justifyContent:"space-between", height: 60, position: "sticky", top: 0, zIndex: 5 }}>
+          <span style={{ fontSize: 13, color: t.txt2 }}>
+            Operator: <strong style={{ color: t.txt }}>{user.name}</strong>
+          </span>
+
+          <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+            <span style={{ fontSize: 11, background: dark ? "#1e293b" : "#f1f5f9", color: t.txt2, padding: "4px 10px", borderRadius: 4, fontWeight: 600, border: `1px solid ${t.border}` }}>
+              {user?.plan === "premium" || user?.plan === "enterprise" ? (
+                "Quota: ♾️ Unlimited Production Access"
+              ) : (
+                `Quota: ${checksLeft}/${FREE_LIMIT} requests`
+              )}
+            </span>
+            
+            {user?.plan !== "premium" && user?.plan !== "enterprise" && (
+              <button onClick={() => setPage("pricing")} style={{ fontSize: 11, background: t.primaryGlow, color: "#fff", border: "none", borderRadius: 4, padding: "6px 14px", cursor: "pointer", fontWeight: 600 }}>
+                Upgrade Seat
+              </button>
+            )}
           </div>
         </div>
 
@@ -634,8 +674,8 @@ if (user?.email === "mfaheem904702@gmail.com") {
               <div style={{fontWeight:700,fontSize:15,color:t.txt}}>Deconstructing Signature Matrix...</div>
               <div style={{color:t.txt2,fontSize:12,marginTop:4}}>Executing contextual analytics and lookup routines</div>
             </Card3D>}
-            {result&&!loading&&(()=>{
-              const v=vs[result.verdict];
+            {result&&!loading&&(()=> {
+              const v=vs[result.verdict] || vs["UNCERTAIN"];
               const typeLabel=result.checkType==="person"?"Personnel Record Check":result.checkType==="link"?"URL Signature Mapping":"Platform Domain Audit";
               return(
                 <div style={{display:"flex",flexDirection:"column",gap:16}}>
@@ -651,8 +691,8 @@ if (user?.email === "mfaheem904702@gmail.com") {
                         <div style={{fontSize:10,color:t.txt2}}>Confidence Score</div>
                       </div>
                     </div>
-                    {result.reasons.length>0&&<div style={{marginBottom:14}}>{result.reasons.map((r,i)=><div key={i} style={{fontSize:13,padding:"8px 12px",borderRadius:4,marginBottom:6,background:dark?"#111827":"#fff",borderLeft:`3px solid ${v.color}`,color:t.txt}}>{r}</div>)}</div>}
-                    {result.safe.length>0&&<div style={{marginBottom:10}}>{result.safe.map((s,i)=><div key={i} style={{fontSize:13,color:"#107c41"}}>✅ {s}</div>)}</div>}
+                    {result.reasons?.length>0&&<div style={{marginBottom:14}}>{result.reasons.map((r: string,i: number)=><div key={i} style={{fontSize:13,padding:"8px 12px",borderRadius:4,marginBottom:6,background:dark?"#111827":"#fff",borderLeft:`3px solid ${v.color}`,color:t.txt}}>{r}</div>)}</div>}
+                    {result.safe?.length>0&&<div style={{marginBottom:10}}>{result.safe.map((s: string,i: number)=><div key={i} style={{fontSize:13,color:"#107c41"}}>✅ {s}</div>)}</div>}
                     {result.warning&&<div style={{background:dark?"#1f2937":"#f8fafc",borderRadius:6,padding:12,fontSize:13,borderLeft:`3px solid ${t.primary}`,marginTop:12,color:t.txt2}}>💡 <strong>Deployment Protocol:</strong> {result.warning}</div>}
                   </Card3D>
                   <div style={{display:"flex",gap:10}}>
@@ -744,7 +784,7 @@ if (user?.email === "mfaheem904702@gmail.com") {
                     <span style={{fontSize:11,fontWeight:700,color:t.primary,background:dark?"#1e293b":"#eff6ff",padding:"4px 12px",borderRadius:4}}>{activeBlog.cat}</span>
                     <h1 style={{fontSize:20,fontWeight:800,margin:"16px 0",lineHeight:1.3}}>{activeBlog.title}</h1>
                     <div style={{fontSize:14,lineHeight:1.8}}>
-                      {activeBlog.content.split('\n').map((l,i)=>{
+                      {activeBlog.content.split('\n').map((l: string,i: number)=>{
                         if(l.startsWith('## '))return<h2 key={i} style={{fontSize:17,fontWeight:700,margin:"20px 0 10px",color:t.txt}}>{l.slice(3)}</h2>;
                         if(l.startsWith('**')&&l.endsWith('**'))return<p key={i} style={{fontWeight:700,margin:"12px 0 4px"}}>{l.slice(2,-2)}</p>;
                         return l?<p key={i} style={{margin:"6px 0",color:t.txt2}}>{l}</p>:<br key={i}/>;
@@ -789,13 +829,12 @@ if (user?.email === "mfaheem904702@gmail.com") {
             <h1 style={{fontSize:18,fontWeight:700,margin:"0 0 20px"}}>Seat Licensing Structure</h1>
             <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(230px,1fr))",gap:16,maxWidth:840,marginBottom:24}}>
               {[
-                {name:"Standard Tier",price:"$0",pkr:"Free",color:"#64748b",features:[`${FREE_LIMIT} requests/day`,"All portals active","Basic parsing metrics","10 index archival memory"],cta:"Current License Active",disabled:true,popular:false},
+                {name:"Standard Tier",price:"$0",pkr:"Free",color:"#64748b",features:[`5 requests/day`,"All portals active","Basic parsing metrics","10 index archival memory"],cta:"Current License Active",disabled:true,popular:false},
                 {name:"Premium Tier",price:"$10",pkr:"Rs. 2,800",color:t.primary,features:["Unlimited checks","Total cross-vertical access","Detailed diagnostic reporting","Infinite archival trail","Export configurations","Priority infrastructure lane"],cta:"Acquire Premium Seat",disabled:false,popular:true},
                 {name:"Enterprise Plan",price:"$25",pkr:"Rs. 7,000",color:"#0f172a",features:["All features in Premium","Direct API endpoints access","5 managed staff seats","White-label outputs","Dedicated engineer account"],cta:"Contact Infrastructure Sales",disabled:false,popular:false}
               ].map((p,i)=>(
-                <Card3D key={i} style={{background:t.card,border:p.popular?`2px solid ${t.primary}`:`1px solid ${t.border}`,borderRadius:8,padding:20,position:"relative"}    } glow={t.glow}>
+                <Card3D key={i} style={{background:t.card,border:p.popular?`2px solid ${t.primary}`:`1px solid ${t.border}`,borderRadius:8,padding:20,position:"relative"}} glow={t.glow}>
                   {p.popular&&<div style={{position:"absolute",top:-11,left:16,background:t.primary,color:"#fff",fontSize:9,fontWeight:700,padding:"2px 8px",borderRadius:4}}>PRODUCTION MINIMUM</div>}
-                  <div style={{fontSize:14,fontWeight:700,color:p.color,marginBottom:6}}>{p.name}</div>
                   <div style={{display:"flex",alignItems:"baseline",gap:2,marginBottom:4}}><span style={{fontSize:28,fontWeight:700}}>{p.price}</span><span style={{fontSize:12,color:t.txt2}}>/month</span></div>
                   <div style={{fontSize:11,color:t.txt2,marginBottom:16}}>Pakistan: {p.pkr}</div>
                   <div style={{display:"flex",flexDirection:"column",gap:8,minHeight:150}}>
@@ -1005,66 +1044,20 @@ if (user?.email === "mfaheem904702@gmail.com") {
   );
 }
 
-// ── ROOT COMPONENT (MANAGED ACTIVE REAL SESSION) ──────────────────────────────
-export default function Root(){
-  const[dark,setDark]=useState(false);
-  const[screen,setScreen]=useState("landing");
-  const[user,setUser]=useState(null);
-  const[loadingAuthCheck, setLoadingAuthCheck] = useState(true);
+// Main Parent Component Wrapper
+export default function App() {
+  const [screen, setScreen] = useState("landing");
+  const [user, setUser] = useState<any>(null);
+  const [dark, setDark] = useState(false);
 
-  // 1. Monitor active login state continuously
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        setUser({
-          name: session.user.user_metadata?.full_name || session.user.email.split("@")[0],
-          email: session.user.email,
-          plan: "free",
-          checksToday: 0
-        });
-        setScreen("app");
-      }
-      setLoadingAuthCheck(false);
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) {
-        setUser({
-          name: session.user.user_metadata?.full_name || session.user.email.split("@")[0],
-          email: session.user.email,
-          plan: "free",
-          checksToday: 0
-        });
-        setScreen("app");
-      } else {
-        setUser(null);
-        setScreen("landing");
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  // Secure Sign Out function call
   const handleRealSignOut = async () => {
     await supabase.auth.signOut();
     setUser(null);
     setScreen("landing");
   };
 
-  if (loadingAuthCheck) {
-    return (
-      <div style={{ minHeight: "100vh", background: "#0f172a", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontFamily: "sans-serif" }}>
-        <div style={{ textAlign: "center" }}>
-          <div style={{ fontSize: 24, marginBottom: 10 }}>🛡️</div>
-          <div>Initializing Security Modules...</div>
-        </div>
-      </div>
-    );
-  }
-
-  if(screen==="auth") return <Auth dark={dark} onAuth={u=>{setUser(u);setScreen("app");}} onBack={()=>setScreen("landing")}/>;
-  if(screen==="app" && user) return <Dashboard user={user} dark={dark} setDark={setDark} onLogout={handleRealSignOut}/>;
+  if(screen === "auth") return <Auth dark={dark} onAuth={(u: any)=>{setUser(u);setScreen("app");}} onBack={()=>setScreen("landing")}/>;
+  if(screen === "app" && user) return <Dashboard user={user} dark={dark} setDark={setDark} onLogout={handleRealSignOut}/>;
   
   return <Landing dark={dark} setDark={setDark} onGetStarted={()=>setScreen("auth")}/>;
 }
