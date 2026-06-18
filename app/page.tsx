@@ -53,7 +53,7 @@ function th(dark: any){
   };
 }
 
-function detectCheckType(q) {
+function detectCheckType(q: any) {
   const inp = q.toLowerCase().trim();
   if(inp.startsWith("http")||inp.includes("www.")||inp.includes(".com")||inp.includes(".pk")||inp.includes(".net")||inp.includes(".org")||inp.includes("bit.ly")||inp.includes("t.me")||inp.includes(".xyz")) return "link";
   if(LINK_SCAM_PATTERNS.some(p=>inp.includes(p))) return "link";
